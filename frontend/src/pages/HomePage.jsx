@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "../utils/axios";
 import ProductCard from "../components/ProductCard";
 import Loader from "../components/Loader";
 
@@ -14,14 +14,14 @@ const HomePage = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      setLoading(true);
-      try {
-        const { data } = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/products?keyword=${keyword}&category=${category}`,
-        );
-        setProducts(data.products);
-      } catch (err) {
-        console.error(err);
+        setLoading(true);
+        try {
+          const { data } = await axios.get(
+            `/api/products?keyword=${keyword}&category=${category}`,
+          );
+          setProducts(data.products);
+        } catch (err) {
+          console.error(err);
       } finally {
         setLoading(false);
       }

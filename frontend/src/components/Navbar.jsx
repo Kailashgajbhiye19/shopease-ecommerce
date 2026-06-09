@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/slices/authSlice";
 import { clearCart } from "../redux/slices/cartSlice";
-import axios from "axios";
+import axios from "../utils/axios";
 
 const Navbar = () => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -13,11 +13,7 @@ const Navbar = () => {
 
   const logoutHandler = async () => {
     try {
-      await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/auth/logout`,
-        {},
-        { withCredentials: true },
-      );
+      await axios.post("/api/auth/logout");
     } catch (err) {}
     dispatch(logout());
     dispatch(clearCart());

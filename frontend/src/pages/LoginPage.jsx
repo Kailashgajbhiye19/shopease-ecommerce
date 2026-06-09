@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
+import axios from "../utils/axios";
 import { setCredentials } from "../redux/slices/authSlice";
 import { toast } from "react-toastify";
 
@@ -16,11 +16,7 @@ const LoginPage = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const { data } = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/auth/login`,
-        { email, password },
-        { withCredentials: true },
-      );
+      const { data } = await axios.post("/api/auth/login", { email, password });
       dispatch(setCredentials(data));
       toast.success("Login successful!");
       navigate("/");

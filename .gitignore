@@ -1,0 +1,23 @@
+# Dependencies
+backend/node_modules/
+frontend/node_modules/
+
+# Environment files
+backend/.env
+frontend/.env
+.env
+.env.*
+
+# Build output
+backend/dist/
+frontend/dist/
+frontend/dist-ssr/
+
+# Local tooling state
+.sixth/
+
+# OS / editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

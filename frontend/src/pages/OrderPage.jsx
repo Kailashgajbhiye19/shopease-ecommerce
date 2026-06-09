@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import axios from "axios";
+import axios from "../utils/axios";
 import Loader from "../components/Loader";
 import { toast } from "react-toastify";
 
@@ -14,13 +14,9 @@ const OrderPage = () => {
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const { data } = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/orders/${id}`,
-          {
-            withCredentials: true,
-            headers: { Authorization: `Bearer ${userInfo.token}` },
-          },
-        );
+        const { data } = await axios.get(`/api/orders/${id}`, {
+          headers: { Authorization: `Bearer ${userInfo.token}` },
+        });
         setOrder(data);
       } catch (err) {
         toast.error("Failed to load order");

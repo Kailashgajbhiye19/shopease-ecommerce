@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "../utils/axios";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import { clearCart, saveShippingAddress } from "../redux/slices/cartSlice";
@@ -35,7 +35,7 @@ const CheckoutPage = () => {
       dispatch(saveShippingAddress({ address, city, postalCode, country }));
 
       const { data: order } = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/orders`,
+        "/api/orders",
         {
           orderItems: cartItems.map((item) => ({
             name: item.name,
@@ -56,17 +56,15 @@ const CheckoutPage = () => {
           totalPrice: total,
         },
         {
-          withCredentials: true,
           headers: { Authorization: `Bearer ${userInfo.token}` },
         },
       );
       setOrderId(order._id);
 
       const { data: payment } = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/payment/create-payment-intent`,
+        "/api/payment/create-payment-intent",
         { amount: total },
         {
-          withCredentials: true,
           headers: { Authorization: `Bearer ${userInfo.token}` },
         },
       );
@@ -83,7 +81,7 @@ const CheckoutPage = () => {
   const handlePaymentSuccess = async (paymentIntent) => {
     try {
       await axios.put(
-        `${import.meta.env.VITE_API_URL}/api/orders/${orderId}/pay`,
+        `/api/orders/${orderId}/pay`,
         {
           id: paymentIntent.id,
           status: paymentIntent.status,
@@ -91,7 +89,6 @@ const CheckoutPage = () => {
           email_address: userInfo.email,
         },
         {
-          withCredentials: true,
           headers: { Authorization: `Bearer ${userInfo.token}` },
         },
       );

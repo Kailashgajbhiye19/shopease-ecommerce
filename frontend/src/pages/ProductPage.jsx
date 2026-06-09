@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import axios from "axios";
+import axios from "../utils/axios";
 import { addToCart } from "../redux/slices/cartSlice";
 import { toast } from "react-toastify";
 import Loader from "../components/Loader";
@@ -17,9 +17,7 @@ const ProductPage = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const { data } = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/products/${id}`,
-        );
+        const { data } = await axios.get(`/api/products/${id}`);
         setProduct(data);
       } catch (err) {
         toast.error("Product not found");

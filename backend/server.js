@@ -1,25 +1,37 @@
 const dotenv = require("dotenv");
-dotenv.config(); // ← Must be first!
+dotenv.config();
+
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const connectDB = require("./config/db.config.js");
 const { notFound, errorHandler } = require("./middleware/error.middleware.js");
 
-dotenv.config();
 connectDB();
 
 const app = express();
 
-app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'https://shopease-ecommerce-vert.vercel.app',
-  ],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-}));
+const allowedOrigins = ["http://localhost:5173", process.env.FRONTEND_URL].filter(Boolean);
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+
+      if (
+        allowedOrigins.includes(origin) ||
+        /^https:\/\/.*\.vercel\.app$/.test(origin)
+      ) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`CORS blocked for origin: ${origin}`));
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
